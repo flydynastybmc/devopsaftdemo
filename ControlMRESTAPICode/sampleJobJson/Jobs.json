@@ -1,0 +1,76 @@
+{
+	"AAPIFileTransferFolder" :
+	{
+		"Type" : "SimpleFolder",
+		"ControlmServer" : "clm-tlv-sucicm",
+		"AAPIFileTransferDownloadDemo" :
+		{
+			"Type" : "Job:FileTransfer",
+			"ConnectionProfileSrc" : "tflw1j",
+			"ConnectionProfileDest" : "LocalConn",
+			"Host": "clm-tlv-sucicm",
+			"FileTransfers" :
+			[
+				{
+					"Src" : "/home/ctm919/installed-versions.txt",
+					"Dest" : "/home/ctm918/aapifile/installed-versions.txt",
+					"TransferType": "Binary",
+					"TransferOption": "SrcToDest"
+				}
+			]
+		},
+		"AFTTransformFile" : {
+			"Type" : "Job:Command",
+			"Priority" : "Very Low",
+			"RunAs" : "ctm918",
+			"Command" : "hostname",
+			"When" : {
+		    	"WeekDays" : [ "NONE" ],
+				"MonthDays" : [ "ALL" ],
+				"DaysRelation" : "OR"
+			},
+			"Notify:NotOK_0" : {
+				"Type" : "Notify:NotOK",
+				"Message" : "test %%\\feivar"
+		  }
+	   },
+	   "AFTValidateFile" : {
+			"Type" : "Job:Command",
+			"Priority" : "Very Low",
+			"RunAs" : "ctm918",
+			"Command" : "hostname",
+			"When" : {
+		    	"WeekDays" : [ "NONE" ],
+				"MonthDays" : [ "ALL" ],
+				"DaysRelation" : "OR"
+			},
+			"Notify:NotOK_0" : {
+				"Type" : "Notify:NotOK",
+				"Message" : "test %%\\feivar"
+		  }
+	   },
+	   "AAPIFileTransferUploadDemo" :
+		{
+			"Type" : "Job:FileTransfer",
+			"ConnectionProfileSrc" : "LocalConn",
+			"ConnectionProfileDest" : "tflw1j",
+			"Host": "clm-tlv-sucicm",
+			"FileTransfers" :
+			[
+				{
+					"Src" : "/home/ctm918/aapifile/installed-versions.txt",
+					"Dest" : "/home/ctm919/aapifile/installed-versions.txt",
+					"TransferType": "Binary",
+					"TransferOption": "SrcToDest"
+				}
+			]
+		},
+		"Flow": {
+			"Type": "Flow",
+			"Sequence": ["AAPIFileTransferDownloadDemo",
+				"AFTTransformFile",
+				"AFTValidateFile",
+				"AAPIFileTransferUploadDemo"]
+		}
+	}
+}
